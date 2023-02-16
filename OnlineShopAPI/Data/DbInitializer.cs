@@ -1,4 +1,5 @@
 using OnlineShopAPI.Entities;
+using Bogus;
 
 namespace OnlineShopAPI.Data
 {
@@ -6,29 +7,31 @@ namespace OnlineShopAPI.Data
     {
         public static void Initialize(ShopContext context){
             if(context.Products.Any()) return;
-            var products = new List<Product>{
-                new Product{
-                    Name = "test name",
-                    Description = "it`s a just a test for Description",
-                    ImageUrl = "images/products/test1.png",
-                    Brand = "test1",
-                    Price = 20,
-                    Type = "test",
-                    QuantityInStock = 10
-                },
-                new Product{
-                    Name = "test2 name",
-                    Description = "it`s a just a test2 for Description",
-                    ImageUrl = "images/products/test2.png",
-                    Brand = "test2",
-                    Price = 20,
-                    Type = "test2",
-                    QuantityInStock = 10
-                }
-            };
-            foreach (var product in products)
+            var faker = new Faker();
+            for (int i = 0; i < 20; i++)
             {
-                context.Products.Add(product);
+                Product product = new Product
+                {
+                    Name = faker.Commerce.ProductName(),
+                    Description = faker.Commerce.ProductDescription(),
+                    ImageUrl = faker.Image.PlaceImgUrl(),
+                    Brand = faker.Commerce.ProductAdjective(),
+                    Price = faker.Random.Long(0, 1000),
+                    Type = faker.Commerce.ProductMaterial(),
+                    QuantityInStock = faker.Random.Int(0, 500),
+                    Rate = faker.Random.Double(0, 5),
+                    PayablePrice = 0,                  
+                };
+                #region -------------------- create payble price random------------------
+                int random = faker.Random.Int(0, 1000);
+                if(random % 2 == 0 && random % 5 == 0){
+                    double discountPercent = faker.Random.Double(0, 0.5);
+                    long finalPayblePrice = product.Price - (long)(product.Price * discountPercent);
+                    product.PayablePrice = finalPayblePrice;
+                    product.DiscountPercent = (int)(discountPercent * 10);
+                }
+                #endregion --------------------------------------------------------
+                context.Add(product);
             }
             context.SaveChanges();
         }

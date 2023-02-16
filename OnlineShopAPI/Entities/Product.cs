@@ -11,9 +11,18 @@ namespace OnlineShopAPI.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         /// <summary>
-        /// we use long beacus we using from sqlite and sqlite dont recgnise decimal and it`s eseier
+        /// We use long beacus we using from sqlite and sqlite does not recognize the decimal and it`s eseier
+        /// total pric(price without discount)
         /// </summary>
         public long Price { get; set; }
+        /// <summary>
+        /// Payable price(price after discount)
+        /// </summary>
+        public long PayablePrice { get; set; }
+        /// <summary>
+        /// discount percent
+        /// </summary>
+        public int DiscountPercent { get; set; }
         /// <summary>
         /// product image
         /// </summary>
@@ -30,5 +39,9 @@ namespace OnlineShopAPI.Entities
         /// number of goods in stock
         /// </summary>
         public int QuantityInStock { get; set; }
+        /// <summary>
+        /// product rate
+        /// </summary>
+        public double Rate { get; set; }
     }
 }
