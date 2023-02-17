@@ -1,19 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Chip,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Rating,
-  Typography,
-} from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { Product } from "../../app/models/product";
 
 interface Props {
@@ -48,7 +33,7 @@ export default function ProductPriceCard({ product }: Props) {
                 color: "green",
               }}
             >
-              ( ${product.price?.toFixed(2)})
+              (${product.price?.toFixed(2)})
             </del>
           </div>
           <Chip color="error" label={disPercent} size="small" />

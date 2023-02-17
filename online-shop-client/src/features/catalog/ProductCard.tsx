@@ -1,15 +1,10 @@
 import {
-  Avatar,
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  CardHeader,
   CardMedia,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Rating,
   Typography,
 } from "@mui/material";
@@ -21,40 +16,44 @@ interface Props {
 }
 export default function ProductCard({ product }: Props) {
   return (
-    <Box sx={{ boxShadow: 10 }}>
-      <Card>
-        <CardMedia
-          sx={{ height: 230, backgroundSize: "contain" }}
-          component="img"
-          alt={product.imageAlt}
-          image={product.imageUrl}
-        />
-        <CardContent>
-          <Typography
-            gutterBottom
-            color="black"
-            fontSize="1rem"
-            variant="h1"
-            component="div"
-            sx={{ fontWeight: "bold" }}
-          >
-            {product.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <Rating
-              name="read-only"
-              precision={0.1}
-              value={product.rate}
-              readOnly
-            />
-          </Typography>
-          <ProductPriceCard product={product} />
-        </CardContent>
-        <CardActions>
-          <Button size="small">Add to cart</Button>
-          <Button size="small">View</Button>
-        </CardActions>
-      </Card>
-    </Box>
+    <Card
+      sx={{
+        ":hover": {
+          boxShadow: 10,
+        },
+      }}
+    >
+      <CardMedia
+        sx={{ height: 230, backgroundSize: "contain" }}
+        component="img"
+        alt={product.imageAlt}
+        image={product.imageUrl}
+      />
+      <CardContent>
+        <Typography
+          gutterBottom
+          color="black"
+          fontSize="1rem"
+          variant="h1"
+          component="div"
+          sx={{ fontWeight: "bold" }}
+        >
+          {product.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <Rating
+            name="read-only"
+            precision={0.1}
+            value={product.rate}
+            readOnly
+          />
+        </Typography>
+        <ProductPriceCard product={product} />
+      </CardContent>
+      <CardActions>
+        <Button size="small">Add to cart</Button>
+        <Button size="small">View</Button>
+      </CardActions>
+    </Card>
   );
 }
