@@ -15,7 +15,7 @@ builder.Services.AddDbContext<ShopContext>(options =>
 {
    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,7 +29,12 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseCors(opt=>{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+});
 app.MapControllers();
 // Initialise and seed database
 app.UseStartupMiddleware();
+
+
 app.Run();
