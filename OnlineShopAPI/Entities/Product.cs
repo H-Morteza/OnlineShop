@@ -27,6 +27,7 @@ namespace OnlineShopAPI.Entities
         /// product image
         /// </summary>
         public string ImageUrl { get; set; }
+        public string ImageAlt { get; set; }
         /// <summary>
         /// product type
         /// </summary>
