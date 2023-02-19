@@ -9,9 +9,7 @@ using OnlineShopAPI.Entities;
 
 namespace OnlineShopAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly ShopContext _context;
 
@@ -21,7 +19,9 @@ namespace OnlineShopAPI.Controllers
         }
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts(){
-            return await _context.Products.ToListAsync();
+            var product = await _context.Products.ToListAsync();
+            if (product == null) return NotFound();
+            return product;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProducts(long id){
