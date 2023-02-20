@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import apiHelper from "../../app/api/apiHelper";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
 
@@ -17,9 +18,9 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/products/${id}`)
-      .then((response) => setProduct(response.data))
+    debugger;
+    apiHelper.Catalog.details(parseInt(id!))
+      .then((product) => setProduct(product))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, [id]);
