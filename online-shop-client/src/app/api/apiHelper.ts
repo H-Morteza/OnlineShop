@@ -4,6 +4,39 @@ import { toast } from "react-toastify";
 axios.defaults.baseURL = "http://localhost:5000/api/";
 const requestBody = (response: AxiosResponse) => response.data;
 
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    const { data, status } = error.response as any;
+    switch (status) {
+      case 400:
+        toast.error(data.title);
+        break;
+      case 401:
+        toast.error(data.title);
+        break;
+      case 403:
+        toast.error("You are not allowed to do that!");
+        break;
+      case 500:
+        toast.error(data.title);
+        break;
+      default:
+        break;
+    }
+    return Promise.reject(error.response);
+  }
+);
+const ApiErrors = {
+  get400Error: () => requests.get(`bug/bad-request`),
+  get401Error: () => requests.get(`bug/unauthorized`),
+  get404Error: () => requests.get(`bug/not-found`),
+  get500Error: () => requests.get(`bug/server-error`),
+  getValidationError: () => requests.get(`bug/validation-error`),
+};
+
 const requests = {
   get: (url: string) => axios.get(url).then(requestBody),
   post: (url: string, body: {}) => axios.post(url, body).then(requestBody),
@@ -18,6 +51,7 @@ const Catalog = {
 
 const apiHelper = {
   Catalog,
+  ApiErrors,
 };
 
 export default apiHelper;
