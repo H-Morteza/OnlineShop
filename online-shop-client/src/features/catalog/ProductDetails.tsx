@@ -10,6 +10,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiHelper from "../../app/api/apiHelper";
+import NotFound from "../../app/errors/NotFound";
+import LodingComponent from "../../app/layout/LodingComponent";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
 
@@ -24,8 +26,8 @@ export default function ProductDetails() {
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, [id]);
-  if (loading) return <h3>Loading....</h3>;
-  if (!product) return <h3>Product not found</h3>;
+  if (loading) return <LodingComponent message="Loading Product..." />;
+  if (!product) return <NotFound />;
   return (
     <Grid container spacing={6}>
       <Grid item xs={6}>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import apiHelper from "../../app/api/apiHelper";
+import LodingComponent from "../../app/layout/LodingComponent";
 import { Product } from "../../app/models/product";
 import ProductList from "./ProductList";
 
@@ -13,7 +14,7 @@ export default function Catalog() {
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, []);
-
+  if (loading) return <LodingComponent message="Loading Products..." />;
   return (
     <>
       <ProductList products={products} />
