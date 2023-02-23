@@ -10,5 +10,7 @@ namespace OnlineShopAPI.Entities
         public long Id { get; set; }
         public string BuyerId { get; set; }
         public List<BasketItemEntity> Items { get; set; } = new();
+        public string PaymentIntentId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }
