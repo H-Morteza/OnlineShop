@@ -13,7 +13,7 @@ namespace OnlineShopAPI.Data
             {
                 string productName = faker.Commerce.ProductName();
                 long productPric = faker.Random.Long(0, 1000);
-                Product product = new()
+                ProductEntiy product = new()
                 {
                     Name = productName,
                     Description = faker.Commerce.ProductDescription(),

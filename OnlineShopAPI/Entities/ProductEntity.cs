@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShopAPI.Entities
 {
-    public class Product
+    public class ProductEntiy
     {
         public long Id { get; set; }
         public string Name { get; set; }

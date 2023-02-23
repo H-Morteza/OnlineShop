@@ -18,13 +18,13 @@ namespace OnlineShopAPI.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts(){
+        public async Task<ActionResult<List<ProductEntiy>>> GetProducts(){
             var product = await _context.Products.ToListAsync();
             if (product == null) return NotFound();
             return product;
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProducts(long id){
+        public async Task<ActionResult<ProductEntiy>> GetProducts(long id){
             return await _context.Products.FirstOrDefaultAsync(x=>x.Id == id);
         }
     }

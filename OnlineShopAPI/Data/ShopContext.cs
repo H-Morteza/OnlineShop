@@ -8,6 +8,8 @@ namespace OnlineShopAPI.Data
         public ShopContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductEntiy> Products { get; set; }
+        public DbSet<BasketEntity> Baskets { get; set; }
+        public DbSet<BasketItemEntity> BasketItems { get; set; }
     }
 }
