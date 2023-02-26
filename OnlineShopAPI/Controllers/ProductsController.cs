@@ -23,7 +23,7 @@ namespace OnlineShopAPI.Controllers
             return productResult.Select(product => _mapper.Map<ProductDto>(product)).ToList();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDto>> GetProducts(long id)
+        public async Task<ActionResult<ProductDto>> GetProduct(long id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (product == null) return NotFound();
