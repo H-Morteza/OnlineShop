@@ -6,11 +6,11 @@ using OnlineShopAPI.Logics;
 
 namespace OnlineShopAPI.Controllers
 {
-    public class BasketCotroller : BaseApiController
+    public class BasketController : BaseApiController
     {
         private readonly ShopContext _context;
         private readonly IMapper _mapper;
-        public BasketCotroller(ShopContext context, IMapper mapper)
+        public BasketController(ShopContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -25,7 +25,7 @@ namespace OnlineShopAPI.Controllers
             return basketDto;
         }
         [HttpPost]
-        public async Task<ActionResult<BasketDto>> AddItemToBaske(long productId, int quantity)
+        public async Task<ActionResult<BasketDto>> AddItemToBasket(long productId, int quantity)
         {
             var basketItem = new BasketLogic(_context, HttpContext);
 
