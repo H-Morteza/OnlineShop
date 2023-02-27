@@ -65,7 +65,12 @@ export default function Header({ darkMode, handelThemeChange }: Props) {
           ))}
         </List>
         <Box display="flex" alignItems="center">
-          <IconButton size="large" sx={{ color: "inherit" }}>
+          <IconButton
+            component={NavLink}
+            to="/basket"
+            size="large"
+            sx={{ color: "inherit" }}
+          >
             <Badge badgeContent={4} color="secondary">
               <ShoppingCart />
             </Badge>

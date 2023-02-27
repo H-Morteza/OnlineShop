@@ -15,6 +15,7 @@ import HomePage from "../../features/home/HomePage";
 import Header from "./Header";
 import "react-toastify/dist/ReactToastify.css";
 import NotFound from "../errors/NotFound";
+import BasketPage from "../../features/basket/BasketPage";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -43,6 +44,7 @@ function App() {
             <Route path="/catalogs/:id" element={<ProductDetails />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/basket" element={<BasketPage />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Container>
