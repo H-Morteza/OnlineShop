@@ -1,5 +1,6 @@
 import { Chip, Typography } from "@mui/material";
 import { Product } from "../../app/models/product";
+import { currencyFormat } from "../../app/utility/utility";
 
 interface Props {
   product: Product;
@@ -26,14 +27,14 @@ export default function ProductPriceCard({ product }: Props) {
             }}
           >
             <Typography variant="body2" color="blue" fontSize={20}>
-              ${product.payablePrice?.toFixed(2)}
+              {currencyFormat(product.payablePrice!)}
             </Typography>
             <del
               style={{
                 color: "green",
               }}
             >
-              (${product.price?.toFixed(2)})
+              ({currencyFormat(product.price!)})
             </del>
           </div>
           <Chip color="error" label={disPercent} size="small" />
@@ -43,7 +44,7 @@ export default function ProductPriceCard({ product }: Props) {
   } else {
     return (
       <Typography variant="body2" color="blue" fontSize={20}>
-        ${product.price?.toFixed(2)}
+        {currencyFormat(product.price!)}
       </Typography>
     );
   }
