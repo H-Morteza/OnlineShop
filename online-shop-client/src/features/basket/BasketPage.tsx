@@ -58,11 +58,22 @@ export default function BasketPage() {
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  ${item.product.price.toFixed(2)}
+                  $
+                  {(item.product.payablePrice != undefined &&
+                  item.product.payablePrice > 0
+                    ? item.product.payablePrice
+                    : item.product.price
+                  ).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">{item.quantity}</TableCell>
                 <TableCell align="right">
-                  ${(item.product.price * item.quantity).toFixed(2)}
+                  $
+                  {(
+                    (item.product.payablePrice != undefined &&
+                    item.product.payablePrice > 0
+                      ? item.product.payablePrice
+                      : item.product.price) * item.quantity
+                  ).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton color="error">
