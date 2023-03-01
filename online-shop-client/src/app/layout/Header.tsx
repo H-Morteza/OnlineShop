@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import { Box, display } from "@mui/system";
 import { NavLink } from "react-router-dom";
+import { useShopContext } from "../context/ShopContext";
 interface Props {
   darkMode: boolean;
   handelThemeChange: () => void;
@@ -37,6 +38,8 @@ const navStyles = {
   },
 };
 export default function Header({ darkMode, handelThemeChange }: Props) {
+  const { basket } = useShopContext();
+  const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <AppBar position="static" sx={{ mb: 4 }}>
       <Toolbar
@@ -71,7 +74,7 @@ export default function Header({ darkMode, handelThemeChange }: Props) {
             size="large"
             sx={{ color: "inherit" }}
           >
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={itemCount} color="secondary">
               <ShoppingCart />
             </Badge>
           </IconButton>
