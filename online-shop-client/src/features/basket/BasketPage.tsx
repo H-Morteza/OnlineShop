@@ -1,4 +1,5 @@
-import { Delete } from "@mui/icons-material";
+import { Add, Delete, Remove } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   IconButton,
@@ -13,20 +14,30 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import apiHelper from "../../app/api/apiHelper";
+import { useShopContext } from "../../app/context/ShopContext";
 import LodingComponent from "../../app/layout/LodingComponent";
 import { Basket } from "../../app/models/basket";
 import { currencyFormat } from "../../app/utility/utility";
 
 export default function BasketPage() {
-  const [loading, setLoading] = useState(true);
-  const [basket, setBasket] = useState<Basket | null>(null);
-  useEffect(() => {
-    apiHelper.Basket.get()
+  const { basket, setBasket, removeItem } = useShopContext();
+  const [loading, setLoading] = useState(false);
+
+  function AddItem(productId: number) {
+    setLoading(true);
+    apiHelper.Basket.addItem(productId)
       .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
-  }, []);
-  if (loading) return <LodingComponent message="loading basket..." />;
+  }
+  function RemoveItem(productId: number, quantity: number = 1) {
+    setLoading(true);
+    apiHelper.Basket.removeItem(productId, quantity)
+      .then((basket) => removeItem(productId, quantity))
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
+  }
+
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;
   return (
@@ -37,7 +48,7 @@ export default function BasketPage() {
             <TableRow>
               <TableCell>Product</TableCell>
               <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Quantity</TableCell>
+              <TableCell align="center">Quantity</TableCell>
               <TableCell align="right">Subtotal</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
@@ -66,7 +77,23 @@ export default function BasketPage() {
                       : item.product.price
                   )}
                 </TableCell>
-                <TableCell align="right">{item.quantity}</TableCell>
+                <TableCell align="center">
+                  <LoadingButton
+                    loading={loading}
+                    onClick={() => RemoveItem(item.productId)}
+                    color="error"
+                  >
+                    <Remove />
+                  </LoadingButton>
+                  {item.quantity}
+                  <LoadingButton
+                    loading={loading}
+                    onClick={() => AddItem(item.productId)}
+                    color="success"
+                  >
+                    <Add />
+                  </LoadingButton>
+                </TableCell>
                 <TableCell align="right">
                   {currencyFormat(
                     (item.product.payablePrice != undefined &&
@@ -76,9 +103,13 @@ export default function BasketPage() {
                   )}
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton color="error">
+                  <LoadingButton
+                    loading={loading}
+                    onClick={() => RemoveItem(item.productId, item.quantity)}
+                    color="error"
+                  >
                     <Delete />
-                  </IconButton>
+                  </LoadingButton>
                 </TableCell>
               </TableRow>
             ))}
