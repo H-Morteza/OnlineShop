@@ -55,7 +55,7 @@ const Basket = {
 
 const Catalog = {
   list: () => requests.get("products"),
-  details: (id: number) => requests.get(`product/${id}`),
+  details: (id: number) => requests.get(`products/${id}`),
 };
 
 const apiHelper = {

@@ -29,6 +29,7 @@ export default function BasketSummary() {
         variant={"outlined"}
         sx={{
           borderRadius: "10px",
+          boxShadow: 3,
           borderColor: "primary.main",
         }}
       >

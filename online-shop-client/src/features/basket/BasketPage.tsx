@@ -160,6 +160,8 @@ export default function BasketPage() {
             size="large"
             fullWidth
             sx={{
+              marginTop: 1,
+              boxShadow: 3,
               ":hover": {
                 boxShadow: 10,
               },
