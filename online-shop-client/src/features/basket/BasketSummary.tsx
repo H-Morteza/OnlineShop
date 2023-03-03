@@ -1,0 +1,63 @@
+import {
+  TableContainer,
+  Paper,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+import { useShopContext } from "../../app/context/ShopContext";
+import { currencyFormat } from "../../app/utility/utility";
+
+/* interface Props {
+  subtotal?: number;
+} */
+
+export default function BasketSummary() {
+  const { basket } = useShopContext();
+  const subtotal =
+    basket?.items.reduce(
+      (sum, item) => sum + item.quantity * item.product.price,
+      0
+    ) ?? 0;
+  const deliveryFee = subtotal > 100 ? 0 : 5;
+
+  return (
+    <>
+      <TableContainer
+        component={Paper}
+        variant={"outlined"}
+        sx={{
+          borderRadius: "10px",
+          borderColor: "primary.main",
+        }}
+      >
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={2}>Subtotal</TableCell>
+              <TableCell align="right">{currencyFormat(subtotal)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={2}>Delivery fee*</TableCell>
+              <TableCell align="right">{currencyFormat(deliveryFee)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell colSpan={2}>Total</TableCell>
+              <TableCell align="right">
+                {currencyFormat(subtotal + deliveryFee)}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <span style={{ fontStyle: "italic" }}>
+                  *Orders over $100 qualify for free delivery
+                </span>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
+}
