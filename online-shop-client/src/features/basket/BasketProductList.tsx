@@ -49,7 +49,7 @@ export default function BasketProductList() {
           borderColor: "primary.main",
         }}
       >
-        <Table sx={{ minWidth: 650 }}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Product</TableCell>
