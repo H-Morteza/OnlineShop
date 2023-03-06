@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 import apiHelper from "../../app/api/apiHelper";
 import { useShopContext } from "../../app/context/ShopContext";
 import { Product } from "../../app/models/product";
-import ProductDetails from "./ProductDetails";
 import ProductPriceCard from "./ProductPriceCard";
 
 interface Props {

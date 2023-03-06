@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import apiHelper from "../../app/api/apiHelper";
 import LodingComponent from "../../app/layout/LodingComponent";

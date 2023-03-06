@@ -9,10 +9,6 @@ import {
 import { useShopContext } from "../../app/context/ShopContext";
 import { currencyFormat } from "../../app/utility/utility";
 
-/* interface Props {
-  subtotal?: number;
-} */
-
 export default function BasketSummary() {
   const { basket } = useShopContext();
   const subtotal =

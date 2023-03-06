@@ -1,4 +1,3 @@
-import { Add, Delete, Remove } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { useShopContext } from "../../app/context/ShopContext";
 import BasketProductList from "./BasketProductList";
