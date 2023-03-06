@@ -11,8 +11,8 @@ import { useShopContext } from "../../app/context/ShopContext";
 import { currencyFormat } from "../../app/utility/utility";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Grid, IconButton, TableHead } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, TableHead } from "@mui/material";
+import { useState } from "react";
 import apiHelper from "../../app/api/apiHelper";
 
 export default function BasketProductList() {
