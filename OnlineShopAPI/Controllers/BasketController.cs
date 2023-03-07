@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopAPI.Data;
 using OnlineShopAPI.DTOs;
+using OnlineShopAPI.Entities;
 using OnlineShopAPI.Logics;
 
 namespace OnlineShopAPI.Controllers
@@ -18,12 +19,19 @@ namespace OnlineShopAPI.Controllers
         [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            var basketItem = new BasketLogic(_context, HttpContext);
-            var basket = await basketItem.RetrieveBasket();
+            BasketEntity basket = await GetOrSetBasket();
             if (basket == null) return NotFound();
             var basketDto = _mapper.Map<BasketDto>(basket);
             return basketDto;
         }
+
+        private async Task<BasketEntity> GetOrSetBasket()
+        {
+            var basketItem = new BasketLogic(_context, HttpContext);
+            var basket = await basketItem.RetrieveBasket();
+            return basket;
+        }
+
         [HttpPost]
         public async Task<ActionResult<BasketDto>> AddItemToBasket(long productId, int quantity)
         {
