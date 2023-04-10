@@ -20,15 +20,17 @@ import { useShopContext } from "../context/ShopContext";
 import { getCookie } from "../utility/utility";
 import apiHelper from "../api/apiHelper";
 import LodingComponent from "./LodingComponent";
+import { useAppDispatch } from "../store/configureStore";
+import { setBasket } from "../../features/basket/basketSlice";
 
 function App() {
-  const { setBasket } = useShopContext();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const buyerId = getCookie("buyerId");
     if (buyerId) {
       apiHelper.Basket.get()
-        .then((basket) => setBasket(basket))
+        .then((basket) => dispatch(setBasket(basket)))
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
     } else {

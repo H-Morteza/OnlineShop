@@ -5,6 +5,8 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ShopProvider } from "./app/context/ShopContext";
+import { store } from "./app/store/configureStore";
+import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,7 +15,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ShopProvider>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </ShopProvider>
     </BrowserRouter>
   </React.StrictMode>

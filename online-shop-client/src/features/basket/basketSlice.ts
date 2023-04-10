@@ -28,3 +28,4 @@ export const basketSlice = createSlice({
     },
   },
 });
+export const { setBasket, removeItem } = basketSlice.actions;
