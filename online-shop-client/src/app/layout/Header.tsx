@@ -12,6 +12,7 @@ import List from "@mui/material/List";
 import { Box, display } from "@mui/system";
 import { NavLink } from "react-router-dom";
 import { useShopContext } from "../context/ShopContext";
+import { useAppSelector } from "../store/configureStore";
 interface Props {
   darkMode: boolean;
   handelThemeChange: () => void;
@@ -38,7 +39,7 @@ const navStyles = {
   },
 };
 export default function Header({ darkMode, handelThemeChange }: Props) {
-  const { basket } = useShopContext();
+  const { basket } = useAppSelector((state) => state.basket);
   const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <AppBar position="static" sx={{ mb: 4 }}>
