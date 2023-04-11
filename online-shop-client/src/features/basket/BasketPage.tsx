@@ -2,9 +2,10 @@ import { Box, Button, Typography } from "@mui/material";
 import { useShopContext } from "../../app/context/ShopContext";
 import BasketProductList from "./BasketProductList";
 import BasketSummary from "./BasketSummary";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketPage() {
-  const { basket } = useShopContext();
+  const { basket } = useAppSelector((state) => state.basket);
   if (!basket || basket.items.length <= 0)
     return (
       <>

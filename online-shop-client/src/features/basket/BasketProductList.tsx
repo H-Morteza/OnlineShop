@@ -14,9 +14,12 @@ import { LoadingButton } from "@mui/lab";
 import { Box, TableHead } from "@mui/material";
 import { useState } from "react";
 import apiHelper from "../../app/api/apiHelper";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { removeItem, setBasket } from "./basketSlice";
 
 export default function BasketProductList() {
-  const { basket, setBasket, removeItem } = useShopContext();
+  const { basket } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
   const [status, setStatus] = useState({
     loading: false,
     name: "",
@@ -25,14 +28,14 @@ export default function BasketProductList() {
   function AddItem(productId: number, name: string) {
     setStatus({ loading: true, name });
     apiHelper.Basket.addItem(productId)
-      .then((basket) => setBasket(basket))
+      .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
   }
   function RemoveItem(productId: number, quantity: number = 1, name: string) {
     setStatus({ loading: true, name });
     apiHelper.Basket.removeItem(productId, quantity)
-      .then((basket) => removeItem(productId, quantity))
+      .then((basket) => dispatch(removeItem({ productId, quantity })))
       .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
   }
