@@ -16,18 +16,23 @@ import NotFound from "../../app/errors/NotFound";
 import LodingComponent from "../../app/layout/LodingComponent";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
+import { useAppSelector } from "../../app/store/configureStore";
+import { useDispatch } from "react-redux";
+import { removeItem, setBasket } from "../basket/basketSlice";
 
 export default function ProductDetails() {
-  const { basket, setBasket, removeItem } = useShopContext();
+  const { basket } = useAppSelector((state) => state.basket);
+  const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [quantity, setQuantity] = useState(0);
   const item = basket?.items.find((i) => i.productId === product?.id);
+  let quantity = item != null && item != undefined ? item.quantity : 0;
+  //const [quantity, setQuantity] = useState(q);
 
   useEffect(() => {
-    if (item) setQuantity(item.quantity);
+    //if (item) setQuantity(item.quantity);
     apiHelper.Catalog.details(parseInt(id!))
       .then((product) => setProduct(product))
       .catch((error) => console.log(error))
@@ -36,22 +41,27 @@ export default function ProductDetails() {
 
   function AddItem(productId: number) {
     apiHelper.Basket.addItem(productId)
-      .then((basket) => setBasket(basket))
+      .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
-      .finally(() =>
-        setQuantity(
+      .finally(() => {
+        quantity = item != null && item != undefined ? item.quantity : quantity;
+        /* setQuantity(
           item != null && item != undefined ? item.quantity : quantity
-        )
-      );
+        ); */
+      });
   }
   function RemoveItem(productId: number, quantity: number = 1) {
     apiHelper.Basket.removeItem(productId, quantity)
-      .then(() => removeItem(productId, quantity))
+      .then(() => dispatch(removeItem({ productId, quantity })))
       .catch((error) => console.log(error))
-      .finally(() =>
-        setQuantity(
-          item != null && item != undefined ? item.quantity : quantity
-        )
+      .finally(
+        () => {
+          quantity =
+            item != null && item != undefined ? item.quantity : quantity;
+        }
+        /* setQuantity(
+          quantity = item != null && item != undefined ? item.quantity : quantity
+        ) */
       );
   }
 
@@ -60,7 +70,8 @@ export default function ProductDetails() {
     m: 1,
     border: 1,
     borderRadius: "10px",
-    style: { height: "5rem" },
+    marginBottom: 0,
+    
   };
 
   if (loading) return <LodingComponent message="Loading Product..." />;

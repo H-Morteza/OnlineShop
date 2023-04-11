@@ -15,17 +15,19 @@ import apiHelper from "../../app/api/apiHelper";
 import { useShopContext } from "../../app/context/ShopContext";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { setBasket } from "../basket/basketSlice";
 
 interface Props {
   product: Product;
 }
 export default function ProductCard({ product }: Props) {
   const [loading, setLoading] = useState(false);
-  const { setBasket } = useShopContext();
+  const dispatch = useAppDispatch();
   function handleAddItem(productId: number) {
     setLoading(true);
     apiHelper.Basket.addItem(productId)
-      .then((basket) => setBasket(basket))
+      .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }
