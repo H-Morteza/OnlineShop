@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useShopContext } from "../../app/context/ShopContext";
 import BasketProductList from "./BasketProductList";
 import BasketSummary from "./BasketSummary";
 import { useAppSelector } from "../../app/store/configureStore";

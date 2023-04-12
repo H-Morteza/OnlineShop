@@ -29,10 +29,8 @@ export default function ProductDetails() {
 
   const item = basket?.items.find((i) => i.productId === product?.id);
   let quantity = item != null && item != undefined ? item.quantity : 0;
-  //const [quantity, setQuantity] = useState(q);
 
   useEffect(() => {
-    //if (item) setQuantity(item.quantity);
     apiHelper.Catalog.details(parseInt(id!))
       .then((product) => setProduct(product))
       .catch((error) => console.log(error))
@@ -45,24 +43,15 @@ export default function ProductDetails() {
       .catch((error) => console.log(error))
       .finally(() => {
         quantity = item != null && item != undefined ? item.quantity : quantity;
-        /* setQuantity(
-          item != null && item != undefined ? item.quantity : quantity
-        ); */
       });
   }
   function RemoveItem(productId: number, quantity: number = 1) {
     apiHelper.Basket.removeItem(productId, quantity)
       .then(() => dispatch(removeItem({ productId, quantity })))
       .catch((error) => console.log(error))
-      .finally(
-        () => {
-          quantity =
-            item != null && item != undefined ? item.quantity : quantity;
-        }
-        /* setQuantity(
-          quantity = item != null && item != undefined ? item.quantity : quantity
-        ) */
-      );
+      .finally(() => {
+        quantity = item != null && item != undefined ? item.quantity : quantity;
+      });
   }
 
   const commonStyles = {
@@ -71,7 +60,6 @@ export default function ProductDetails() {
     border: 1,
     borderRadius: "10px",
     marginBottom: 0,
-    
   };
 
   if (loading) return <LodingComponent message="Loading Product..." />;

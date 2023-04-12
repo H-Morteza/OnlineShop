@@ -7,7 +7,6 @@ import {
   TableCell,
   Typography,
 } from "@mui/material";
-import { useShopContext } from "../../app/context/ShopContext";
 import { currencyFormat } from "../../app/utility/utility";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
