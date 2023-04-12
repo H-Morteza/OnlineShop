@@ -15,7 +15,7 @@ const initialState: BasketState = {
 export const addBasketItemAsync = createAsyncThunk<
   Basket,
   { productId: number; quntity: number }
->("", async ({ productId, quntity }) => {
+>("basket/addBasketItemAsync", async ({ productId, quntity }) => {
   try {
     return await apiHelper.Basket.addItem(productId, quntity);
   } catch (error) {
@@ -48,7 +48,7 @@ export const basketSlice = createSlice({
       state.basket = action.payload;
       state.status = "complete";
     });
-    builder.addCase(addBasketItemAsync.pending, (state) => {
+    builder.addCase(addBasketItemAsync.rejected, (state) => {
       state.status = "complete";
     });
   },
