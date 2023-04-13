@@ -15,22 +15,22 @@ import apiHelper from "../../app/api/apiHelper";
 import { useShopContext } from "../../app/context/ShopContext";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
-import { useAppDispatch } from "../../app/store/configureStore";
-import { setBasket } from "../basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync, setBasket } from "../basket/basketSlice";
 
 interface Props {
   product: Product;
 }
 export default function ProductCard({ product }: Props) {
-  const [loading, setLoading] = useState(false);
+  const { status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
-  function handleAddItem(productId: number) {
+  /*   function handleAddItem(productId: number) {
     setLoading(true);
     apiHelper.Basket.addItem(productId)
       .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
-  }
+  } */
   return (
     <Card
       sx={{
@@ -68,8 +68,10 @@ export default function ProductCard({ product }: Props) {
       </CardContent>
       <CardActions>
         <LoadingButton
-          loading={loading}
-          onClick={() => handleAddItem(product.id!)}
+          loading={status === "pendingAddItem" + product.id!}
+          onClick={() =>
+            dispatch(addBasketItemAsync({ productId: product.id! }))
+          }
           size="small"
         >
           Add to cart
