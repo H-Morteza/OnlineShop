@@ -14,10 +14,10 @@ const initialState: BasketState = {
 
 export const addBasketItemAsync = createAsyncThunk<
   Basket,
-  { productId: number; quntity: number }
+  { productId: number; quntity?: number }
 >("basket/addBasketItemAsync", async ({ productId, quntity }) => {
   try {
-    return await apiHelper.Basket.addItem(productId, quntity);
+    return await apiHelper.Basket.addItem(productId, (quntity = 1));
   } catch (error) {
     console.log(error);
   }

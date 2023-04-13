@@ -16,13 +16,16 @@ import NotFound from "../../app/errors/NotFound";
 import LodingComponent from "../../app/layout/LodingComponent";
 import { Product } from "../../app/models/product";
 import ProductPriceCard from "./ProductPriceCard";
-import { useAppSelector } from "../../app/store/configureStore";
-import { useDispatch } from "react-redux";
-import { removeItem, setBasket } from "../basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import {
+  addBasketItemAsync,
+  removeItem,
+  setBasket,
+} from "../basket/basketSlice";
 
 export default function ProductDetails() {
   const { basket } = useAppSelector((state) => state.basket);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,13 +41,9 @@ export default function ProductDetails() {
   }, [id, item]);
 
   function AddItem(productId: number) {
-    apiHelper.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => console.log(error))
-      .finally(() => {
-        quantity = item != null && item != undefined ? item.quantity : quantity;
-      });
+    dispatch(addBasketItemAsync({ productId: productId, quntity: quantity }));
   }
+
   function RemoveItem(productId: number, quantity: number = 1) {
     apiHelper.Basket.removeItem(productId, quantity)
       .then(() => dispatch(removeItem({ productId, quantity })))
