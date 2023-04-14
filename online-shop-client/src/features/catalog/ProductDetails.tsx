@@ -19,7 +19,7 @@ import ProductPriceCard from "./ProductPriceCard";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import {
   addBasketItemAsync,
-  removeItem,
+  removeBasketItemAsync,
   setBasket,
 } from "../basket/basketSlice";
 
@@ -45,12 +45,9 @@ export default function ProductDetails() {
   }
 
   function RemoveItem(productId: number, quantity: number = 1) {
-    apiHelper.Basket.removeItem(productId, quantity)
-      .then(() => dispatch(removeItem({ productId, quantity })))
-      .catch((error) => console.log(error))
-      .finally(() => {
-        quantity = item != null && item != undefined ? item.quantity : quantity;
-      });
+    dispatch(
+      removeBasketItemAsync({ productId: product?.id!, quntity: quantity })
+    );
   }
 
   const commonStyles = {
