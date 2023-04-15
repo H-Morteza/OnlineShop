@@ -3,17 +3,19 @@ import apiHelper from "../../app/api/apiHelper";
 import LodingComponent from "../../app/layout/LodingComponent";
 import { Product } from "../../app/models/product";
 import ProductList from "./ProductList";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchProductsAsync, productSlectors } from "./catalogSlice";
 
 export default function Catalog() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const products = useAppSelector(productSlectors.selectAll);
+  const { productsLoaded, status } = useAppSelector((state) => state.catalog);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    apiHelper.Catalog.list()
-      .then((products) => setProducts(products))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, []);
-  if (loading) return <LodingComponent message="Loading Products..." />;
+    if (!productsLoaded) dispatch(fetchProductsAsync());
+  }, [productsLoaded]);
+  if (status.includes("pending"))
+    return <LodingComponent message="Loading Products..." />;
   return (
     <>
       <ProductList products={products} />
