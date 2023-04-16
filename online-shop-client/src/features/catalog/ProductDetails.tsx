@@ -22,23 +22,22 @@ import {
   removeBasketItemAsync,
   setBasket,
 } from "../basket/basketSlice";
+import { fetchProductAsync, productSlectors } from "./catalogSlice";
 
 export default function ProductDetails() {
   const { basket } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-
+  const product = useAppSelector((state) =>
+    productSlectors.selectById(state, id!)
+  );
+  const { status } = useAppSelector((state) => state.catalog);
   const item = basket?.items.find((i) => i.productId === product?.id);
   let quantity = item != null && item != undefined ? item.quantity : 0;
 
   useEffect(() => {
-    apiHelper.Catalog.details(parseInt(id!))
-      .then((product) => setProduct(product))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, [id, item]);
+    if (!product) dispatch(fetchProductAsync(parseInt(id!)));
+  }, [id, , dispatch, product]);
 
   function AddItem(productId: number) {
     dispatch(addBasketItemAsync({ productId: productId, quntity: quantity }));
@@ -58,7 +57,8 @@ export default function ProductDetails() {
     marginBottom: 0,
   };
 
-  if (loading) return <LodingComponent message="Loading Product..." />;
+  if (status.includes("pending"))
+    return <LodingComponent message="Loading Product..." />;
   if (!product) return <NotFound />;
   return (
     <Grid container spacing={6}>
