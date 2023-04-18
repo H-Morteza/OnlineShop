@@ -38,7 +38,7 @@ namespace OnlineShopAPI.Controllers
             var (basketEntity, basketLogic) = await GetOrSetBasket();
             if (basketEntity == null) basketEntity = basketLogic.CreatBasket();
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product == null) return BadRequest(new ProblemDetails { Title = "Product not found" });
 
             basketLogic.AddItem(basketEntity.Items, product, quantity);
             var result = await _context.SaveChangesAsync();
