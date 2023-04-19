@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OnlineShopAPI.DTOs
+namespace OnlineShopAPI.DTOs.Response
 {
-    public class ProductDto
+    public class ProductResponseDto
     {
         public long Id { get; set; }
         public string Name { get; set; }

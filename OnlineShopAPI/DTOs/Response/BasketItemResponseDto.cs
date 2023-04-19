@@ -1,11 +1,11 @@
-namespace OnlineShopAPI.DTOs
+namespace OnlineShopAPI.DTOs.Response
 {
-    public class BasketItemDto
+    public class BasketItemResponseDto
     {
         public long Id { get; set; }
         public int Quantity { get; set; }
         public long ProductId { get; set; }
-        public ProductDto Product { get; set; }
+        public ProductResponseDto Product { get; set; }
         public long BasketId { get; set; }
     }
 }
