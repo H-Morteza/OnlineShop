@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using OnlineShopAPI.DTOs;
+using OnlineShopAPI.DTOs.Response;
 using OnlineShopAPI.Entities;
 
 namespace OnlineShopAPI.Mappers
@@ -8,12 +8,12 @@ namespace OnlineShopAPI.Mappers
     {
         public AutoMapperProfile()
         {
-            CreateMap<BasketEntity, BasketDto>();
-            CreateMap<BasketDto, BasketEntity>();
-            CreateMap<ProductEntiy, ProductDto>();
-            CreateMap<ProductDto, ProductEntiy>();
-            CreateMap<BasketItemEntity, BasketItemDto>();
-            CreateMap<BasketItemDto, BasketItemEntity>();
+            CreateMap<BasketEntity, BasketResponseDto>();
+            CreateMap<BasketResponseDto, BasketEntity>();
+            CreateMap<ProductEntiy, ProductResponseDto>();
+            CreateMap<ProductResponseDto, ProductEntiy>();
+            CreateMap<BasketItemEntity, BasketItemResponseDto>();
+            CreateMap<BasketItemResponseDto, BasketItemEntity>();
         }
     }
 }

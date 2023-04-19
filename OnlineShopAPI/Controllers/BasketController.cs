@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopAPI.Data;
-using OnlineShopAPI.DTOs;
+using OnlineShopAPI.DTOs.Response;
 using OnlineShopAPI.Entities;
 using OnlineShopAPI.Logics;
 
@@ -17,11 +17,11 @@ namespace OnlineShopAPI.Controllers
             _mapper = mapper;
         }
         [HttpGet(Name = "GetBasket")]
-        public async Task<ActionResult<BasketDto>> GetBasket()
+        public async Task<ActionResult<BasketResponseDto>> GetBasket()
         {
             var (basketEntity, _) = await GetOrSetBasket();
             if (basketEntity == null) return NotFound();
-            var basketDto = _mapper.Map<BasketDto>(basketEntity);
+            var basketDto = _mapper.Map<BasketResponseDto>(basketEntity);
             return basketDto;
         }
 
@@ -33,7 +33,7 @@ namespace OnlineShopAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BasketDto>> AddItemToBasket(long productId, int quantity)
+        public async Task<ActionResult<BasketResponseDto>> AddItemToBasket(long productId, int quantity)
         {
             var (basketEntity, basketLogic) = await GetOrSetBasket();
             if (basketEntity == null) basketEntity = basketLogic.CreatBasket();
@@ -42,7 +42,7 @@ namespace OnlineShopAPI.Controllers
 
             basketLogic.AddItem(basketEntity.Items, product, quantity);
             var result = await _context.SaveChangesAsync();
-            if (result > 0) return CreatedAtRoute("GetBasket", _mapper.Map<BasketDto>(basketEntity));
+            if (result > 0) return CreatedAtRoute("GetBasket", _mapper.Map<BasketResponseDto>(basketEntity));
             return BadRequest(new ProblemDetails { Title = "Problem saving item to basket" });
         }
 
