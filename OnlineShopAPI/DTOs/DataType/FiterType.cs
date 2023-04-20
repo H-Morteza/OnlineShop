@@ -5,9 +5,8 @@
         None = 0,
         LowestPrice = 1,
         HighestPrice = 2,
-        WithDiscount = 3,
-        Favorites = 4,
-        BestSelling = 5,
-        Newest = 6,
+        Favorites = 3,
+        BestSelling = 4,
+        Newest = 5,
     }
 }
