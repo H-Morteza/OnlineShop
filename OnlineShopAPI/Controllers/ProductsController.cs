@@ -2,7 +2,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopAPI.Data;
+using OnlineShopAPI.DTOs.Request;
 using OnlineShopAPI.DTOs.Response;
+using OnlineShopAPI.Logics;
 
 namespace OnlineShopAPI.Controllers
 {
@@ -15,12 +17,14 @@ namespace OnlineShopAPI.Controllers
             _context = context;
             _mapper = mapper;
         }
-        [HttpGet]
-        public async Task<ActionResult<List<ProductResponseDto>>> GetProducts()
+        [HttpPost]
+        public async Task<ActionResult<List<ProductResponseDto>>> GetProducts(ProductReuquestDto productReuquest)
         {
-            var productResult = await _context.Products.ToListAsync();
-            if (productResult == null) return NotFound();
-            return productResult.Select(product => _mapper.Map<ProductResponseDto>(product)).ToList();
+            //ProductReuquestDto product = new();
+            
+            var productLogic = await new ProductLogic(_context).GetProducts(productReuquest);
+            if(productLogic == null) return NotFound();
+            return productLogic.Select(product => _mapper.Map<ProductResponseDto>(product)).ToList();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResponseDto>> GetProduct(long id)
