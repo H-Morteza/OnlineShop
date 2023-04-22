@@ -1,6 +1,6 @@
 ﻿namespace OnlineShopAPI.DTOs.DataType
 {
-    public enum FiterType : byte
+    public enum FiterType : int
     {
         None = 0,
         LowestPrice = 1,
