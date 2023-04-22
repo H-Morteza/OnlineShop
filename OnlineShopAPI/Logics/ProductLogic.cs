@@ -34,12 +34,10 @@ namespace OnlineShopAPI.Logics
                 productResult = productResult.OrderBy(x => x.Price);
             if (productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
                 productResult = productResult.OrderByDescending(x => x.Price);
-            if (productReuquest.PageNumber is not null && productReuquest.PageCount is not null)
-            {
-                int count = (int)productReuquest.PageCount;
-                int index = (int)productReuquest.PageNumber;
-                productResult = productResult.Skip(index * count).Take(count);
-            }
+
+            int count = productReuquest.PageSize;
+            int index = productReuquest.PageNumber;
+            productResult = productResult.Skip(index * count).Take(count);
 
             return await productResult.ToListAsync();
 
