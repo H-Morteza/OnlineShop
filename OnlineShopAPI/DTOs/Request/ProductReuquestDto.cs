@@ -5,8 +5,8 @@ namespace OnlineShopAPI.DTOs.Request
     public class ProductReuquestDto
     {
         private int MaxPageCount { get; set; } = 50;
-        public int PageNumber { get; set; } = 0;
-        public int _pgeCount { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
+        private int _pgeCount { get; set; } = 10;
         public int PageSize
         {
             get => _pgeCount;

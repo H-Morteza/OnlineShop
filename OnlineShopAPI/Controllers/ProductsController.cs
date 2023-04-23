@@ -5,6 +5,7 @@ using OnlineShopAPI.Data;
 using OnlineShopAPI.DTOs.Request;
 using OnlineShopAPI.DTOs.Response;
 using OnlineShopAPI.Logics;
+using System.Text.Json;
 
 namespace OnlineShopAPI.Controllers
 {
@@ -20,11 +21,11 @@ namespace OnlineShopAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<ProductResponseDto>>> GetProducts(ProductReuquestDto productReuquest)
         {
-            //ProductReuquestDto product = new();
-            
             var productLogic = await new ProductLogic(_context).GetProducts(productReuquest);
-            if(productLogic == null) return NotFound();
-            return productLogic.Select(product => _mapper.Map<ProductResponseDto>(product)).ToList();
+            if (productLogic.product == null) return NotFound();
+
+            Response.Headers.Add("Pagination", JsonSerializer.Serialize(productLogic.metaData));
+            return productLogic.product.Select(product => _mapper.Map<ProductResponseDto>(product)).ToList();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResponseDto>> GetProduct(long id)
