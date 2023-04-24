@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopAPI.Data;
 using OnlineShopAPI.DTOs.Request;
 using OnlineShopAPI.DTOs.Response;
+using OnlineShopAPI.Extendions;
 using OnlineShopAPI.Logics;
-using System.Text.Json;
 
 namespace OnlineShopAPI.Controllers
 {
@@ -24,7 +24,7 @@ namespace OnlineShopAPI.Controllers
             var productLogic = await new ProductLogic(_context).GetProducts(productReuquest);
             if (productLogic.product == null) return NotFound();
 
-            Response.Headers.Add("Pagination", JsonSerializer.Serialize(productLogic.metaData));
+            Response.AddPaginationHeader(productLogic.metaData);
             return productLogic.product.Select(product => _mapper.Map<ProductResponseDto>(product)).ToList();
         }
         [HttpGet("{id}")]
@@ -33,6 +33,13 @@ namespace OnlineShopAPI.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (product == null) return NotFound();
             return _mapper.Map<ProductResponseDto>(product);
+        }
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetFilters()
+        {
+            var brands = await _context.Products.Select(b => b.Brand).Distinct().ToListAsync();
+            var types = await _context.Products.Select(b => b.Type).Distinct().ToListAsync();
+            return Ok(new { brands, types });
         }
     }
 }

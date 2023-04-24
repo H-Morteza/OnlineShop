@@ -6,7 +6,7 @@ namespace OnlineShopAPI.DTOs.Request
     {
         private int MaxPageCount { get; set; } = 50;
         public int PageNumber { get; set; } = 1;
-        private int _pgeCount { get; set; } = 10;
+        private int _pgeCount { get; set; } = 8;
         public int PageSize
         {
             get => _pgeCount;
