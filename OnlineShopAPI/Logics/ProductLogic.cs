@@ -29,11 +29,11 @@ namespace OnlineShopAPI.Logics
                 productResult = productResult.Where(x => x.Price <= productReuquest.Filter.MaxPrice);
             if (productReuquest.Filter.MinPrice is not null && productReuquest.Filter.MinPrice > 0)
                 productResult = productResult.Where(x => x.Price >= productReuquest.Filter.MinPrice);
-            if ((bool)productReuquest.Filter.WithDiscount)
+            if (productReuquest.Filter.WithDiscount is not null && (bool)productReuquest.Filter.WithDiscount)
                 productResult = productResult.Where(x => x.DiscountPercent > 0);
-            if (productReuquest.Filter.FiterType is DTOs.DataType.FiterType.LowestPrice)
+            if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.LowestPrice)
                 productResult = productResult.OrderBy(x => x.Price);
-            if (productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
+            if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
                 productResult = productResult.OrderByDescending(x => x.Price);
 
             int count = productReuquest.PageSize > 0 ? productReuquest.PageSize : 8;
