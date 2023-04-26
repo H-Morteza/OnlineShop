@@ -37,9 +37,12 @@ namespace OnlineShopAPI.Controllers
         [HttpGet("filters")]
         public async Task<IActionResult> GetFilters()
         {
-            var brands = await _context.Products.Select(b => b.Brand).Distinct().ToListAsync();
-            var types = await _context.Products.Select(b => b.Type).Distinct().ToListAsync();
-            return Ok(new { brands, types });
+            var allProduct = _context.Products.AsQueryable();
+            var brands = await allProduct.Select(b => b.Brand).Distinct().ToListAsync();
+            var types = await allProduct.Select(t => t.Type).Distinct().ToListAsync();
+            var minPrice = allProduct.OrderBy(x => x.Price).FirstOrDefault().Price;
+            var maxPrice = allProduct.OrderByDescending(x => x.Price).FirstOrDefault().Price;
+            return Ok(new { brands, types, minPrice, maxPrice });
         }
     }
 }
