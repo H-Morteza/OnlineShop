@@ -73,20 +73,26 @@ export default function CustomSlider({ minPrice, maxPrice }: Props) {
     const [currentMin, currentMax] = value;
 
     if (isMin) {
-      setMinInput(inputValue);
-      if (parsedInput <= currentMax && parsedInput > minPrice) {
-        setValue([parsedInput, currentMax]);
-      } else if (parsedInput >= currentMax) {
-        setMinInput((currentMax - 1).toString());
-        setValue([currentMax - 1, currentMax]);
+      if (parsedInput == 0) setMinInput("0");
+      else {
+        setMinInput(inputValue);
+        if (parsedInput <= currentMax && parsedInput > minPrice) {
+          setValue([parsedInput, currentMax]);
+        } else if (parsedInput >= currentMax) {
+          setMinInput((currentMax - 1).toString());
+          setValue([currentMax - 1, currentMax]);
+        }
       }
     } else {
-      setMaxInput(inputValue);
-      if (parsedInput <= maxPrice && parsedInput > currentMin) {
-        setValue([currentMin, parsedInput]);
-      } else if (parsedInput > maxPrice) {
-        setValue([currentMin, maxPrice]);
-        setMaxInput(maxPrice.toString());
+      if (parsedInput == 0) setMaxInput("0");
+      else {
+        setMaxInput(inputValue);
+        if (parsedInput <= maxPrice && parsedInput > currentMin) {
+          setValue([currentMin, parsedInput]);
+        } else if (parsedInput > maxPrice) {
+          setValue([currentMin, maxPrice]);
+          setMaxInput(maxPrice.toString());
+        }
       }
     }
   };
