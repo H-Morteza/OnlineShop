@@ -36,12 +36,12 @@ namespace OnlineShopAPI.Logics
             if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
                 productResult = productResult.OrderByDescending(x => x.Price);
 
-            int count = productReuquest.PageSize > 0 ? productReuquest.PageSize : 8;
-            int index = productReuquest.PageNumber > 0 ? productReuquest.PageNumber - 1 : 0;
-            int productCount = productResult.Count();
+            int count = Math.Max(productReuquest.PageSize, 8);
+            int index = Math.Max(productReuquest.PageNumber - 1, 0);
+            int productCount = await productResult.CountAsync();
 
             productResult = productResult.Skip(index * count).Take(count);
-            MetaDataDto metaDate = new()
+            MetaDataDto metaData = new()
             {
                 CurrentPage = index + 1,
                 PageSize = count,
@@ -50,7 +50,7 @@ namespace OnlineShopAPI.Logics
             };
             var productList = await productResult.ToListAsync();
 
-            return (productList, metaDate);
+            return (productList, metaData);
 
         }
     }
