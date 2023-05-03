@@ -36,7 +36,7 @@ namespace OnlineShopAPI.Logics
             if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
                 productResult = productResult.OrderByDescending(x => x.Price);
 
-            int count = Math.Max(productReuquest.PageSize, 8);
+            int count = productReuquest.PageSize;
             int index = Math.Max(productReuquest.PageNumber - 1, 0);
             int productCount = await productResult.CountAsync();
 
