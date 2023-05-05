@@ -21,10 +21,10 @@ namespace OnlineShopAPI.Logics
 
             if (!string.IsNullOrEmpty(productReuquest.ProductName))
                 productResult = productResult.Where(x => x.Name.Contains(productReuquest.ProductName));
-            if (!string.IsNullOrEmpty(productReuquest.ProductType))
-                productResult = productResult.Where(x => x.Name.Contains(productReuquest.ProductType));
-            if (!string.IsNullOrEmpty(productReuquest.ProductBrand))
-                productResult = productResult.Where(x => x.Name.Contains(productReuquest.ProductBrand));
+            if (productReuquest.ProductTypes is not null && productReuquest.ProductTypes.Count > 0)
+                productResult = productResult.Where(x => productReuquest.ProductTypes.Contains(x.Type));
+            if (productReuquest.ProductBrands is not null && productReuquest.ProductBrands.Count > 0)
+                productResult = productResult.Where(x => productReuquest.ProductBrands.Contains(x.Brand));
             if (productReuquest.Filter.MaxPrice is not null && productReuquest.Filter.MaxPrice > 0)
                 productResult = productResult.Where(x => x.Price <= productReuquest.Filter.MaxPrice);
             if (productReuquest.Filter.MinPrice is not null && productReuquest.Filter.MinPrice > 0)
