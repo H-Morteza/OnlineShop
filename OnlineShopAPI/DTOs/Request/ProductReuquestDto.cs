@@ -13,8 +13,8 @@ namespace OnlineShopAPI.DTOs.Request
             set => _pgeCount = value > MaxPageCount ? MaxPageCount : value;
         }
         public string ProductName { get; set; }
-        public string ProductType { get; set; }
-        public string ProductBrand { get; set; }
+        public List<string> ProductTypes { get; set; }
+        public List<string> ProductBrands { get; set; }
         public FilterDto Filter { get; set; }
 
     }
