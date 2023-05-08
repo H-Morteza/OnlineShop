@@ -47,15 +47,8 @@ const FilterSection = ({ title, open, handleClick, children }: any) => (
 );
 export default function Catalog() {
   const products = useAppSelector(productSlectors.selectAll);
-  const {
-    productsLoaded,
-    status,
-    filtersLoaded,
-    brands,
-    types,
-    maxPrice,
-    minPrice,
-  } = useAppSelector((state) => state.catalog);
+  const { productsLoaded, status, filtersLoaded, productReuquest } =
+    useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!productsLoaded) dispatch(fetchProductsAsync());
@@ -108,7 +101,7 @@ export default function Catalog() {
             open={openType}
             handleClick={handleClick(setOpenType, setOpenBrand)}
           >
-            <CustomFilterList customLists={types} />
+            <CustomFilterList customLists={productReuquest.productType!} />
           </FilterSection>
 
           <FilterSection
@@ -116,7 +109,7 @@ export default function Catalog() {
             open={openBrand}
             handleClick={handleClick(setOpenBrand, setOpenType)}
           >
-            <CustomFilterList customLists={brands} />
+            <CustomFilterList customLists={productReuquest.productBrand!} />
           </FilterSection>
 
           <FilterSection
@@ -124,7 +117,10 @@ export default function Catalog() {
             open={openPrice}
             handleClick={handleClick(setOpenPrice, null)}
           >
-            <CustomSlider minPrice={minPrice} maxPrice={maxPrice} />
+            <CustomSlider
+              minPrice={productReuquest.filter.minPrice!}
+              maxPrice={productReuquest.filter.maxPrice!}
+            />
           </FilterSection>
         </List>
       </Grid>
