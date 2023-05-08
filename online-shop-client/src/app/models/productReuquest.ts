@@ -2,8 +2,8 @@ export interface ProductReuquest {
   pageNumber: number;
   pageSize: number;
   productName?: string;
-  productType?: string;
-  productBrand?: string;
+  productType?: string[];
+  productBrand?: string[];
   filter: Filter;
 }
 export interface Filter {
