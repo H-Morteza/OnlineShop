@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { ProductReuquest } from "../models/productReuquest";
 
 axios.defaults.baseURL = "http://localhost:5000/api/";
 const requestBody = (response: AxiosResponse) => response.data;
@@ -54,8 +55,9 @@ const Basket = {
 };
 
 const Catalog = {
-  list: () => requests.get("products"),
+  list: (reuquest: ProductReuquest) => requests.post("products", reuquest),
   details: (id: number) => requests.get(`products/${id}`),
+  filters: () => requests.get("products/filters"),
 };
 
 const apiHelper = {
