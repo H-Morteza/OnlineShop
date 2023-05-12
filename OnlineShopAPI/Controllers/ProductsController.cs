@@ -35,14 +35,25 @@ namespace OnlineShopAPI.Controllers
             return _mapper.Map<ProductResponseDto>(product);
         }
         [HttpGet("filters")]
-        public async Task<IActionResult> GetFilters()
+        public async Task<ActionResult<ProductFilterResponseDto>> GetFilters()
         {
             var allProduct = _context.Products.AsQueryable();
             var brands = await allProduct.Select(b => b.Brand).Distinct().ToListAsync();
             var types = await allProduct.Select(t => t.Type).Distinct().ToListAsync();
             var minPrice = allProduct.OrderBy(x => x.Price).FirstOrDefault().Price;
             var maxPrice = allProduct.OrderByDescending(x => x.Price).FirstOrDefault().Price;
-            return Ok(new { brands, types, minPrice, maxPrice });
+            //return Ok(new { brands, types, minPrice, maxPrice });
+            ProductFilterResponseDto productFilterResponse = new()
+            {
+                ProductBrands = brands,
+                ProductTypes = types,
+                Filter = new()
+                {
+                    MaxPrice = maxPrice,
+                    MinPrice = minPrice,
+                }
+            };
+            return productFilterResponse;
         }
     }
 }

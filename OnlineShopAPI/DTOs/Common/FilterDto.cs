@@ -7,6 +7,6 @@ namespace OnlineShopAPI.DTOs.Common
         public decimal? MaxPrice { get; set; }
         public decimal? MinPrice { get; set; }
         public bool? WithDiscount { get; set; }
-        public FiterType? FiterType { get; set; }
+        public FilterType? FilterType { get; set; }
     }
 }
