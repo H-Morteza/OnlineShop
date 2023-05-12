@@ -20,7 +20,7 @@ namespace OnlineShopAPI.Logics
             if (productResult == null || !productResult.Any()) return (null, null);
 
             if (!string.IsNullOrEmpty(productReuquest.ProductName))
-                productResult = productResult.Where(x => x.Name.Contains(productReuquest.ProductName));
+                productResult = productResult.Where(x => x.Name.ToLower().Contains(productReuquest.ProductName.ToLower()));
             if (productReuquest.ProductTypes is not null && productReuquest.ProductTypes.Count > 0)
                 productResult = productResult.Where(x => productReuquest.ProductTypes.Contains(x.Type));
             if (productReuquest.ProductBrands is not null && productReuquest.ProductBrands.Count > 0)
@@ -31,9 +31,11 @@ namespace OnlineShopAPI.Logics
                 productResult = productResult.Where(x => x.Price >= productReuquest.Filter.MinPrice);
             if (productReuquest.Filter.WithDiscount is not null && (bool)productReuquest.Filter.WithDiscount)
                 productResult = productResult.Where(x => x.DiscountPercent > 0);
-            if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.LowestPrice)
+            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.Alphabetical)
+                productResult = productResult.OrderBy(x => x.Name);
+            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.LowestPrice)
                 productResult = productResult.OrderBy(x => x.Price);
-            if (productReuquest.Filter.FiterType is not null && productReuquest.Filter.FiterType is DTOs.DataType.FiterType.HighestPrice)
+            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.HighestPrice)
                 productResult = productResult.OrderByDescending(x => x.Price);
 
             int count = productReuquest.PageSize;
@@ -55,3 +57,5 @@ namespace OnlineShopAPI.Logics
         }
     }
 }
+
+

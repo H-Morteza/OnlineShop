@@ -1,12 +1,13 @@
 ﻿namespace OnlineShopAPI.DTOs.DataType
 {
-    public enum FiterType : int
+    public enum FilterType : int
     {
         None = 0,
-        LowestPrice = 1,
-        HighestPrice = 2,
-        Favorites = 3,
-        BestSelling = 4,
-        Newest = 5,
+        Alphabetical = 1,
+        LowestPrice = 2,
+        HighestPrice = 3,
+        Favorites = 4,
+        BestSelling = 5,
+        Newest = 6,
     }
 }

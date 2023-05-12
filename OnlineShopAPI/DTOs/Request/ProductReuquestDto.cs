@@ -2,7 +2,7 @@
 
 namespace OnlineShopAPI.DTOs.Request
 {
-    public class ProductReuquestDto
+    public class ProductReuquestDto : ProductBaseDto
     {
         private int MaxPageCount { get; set; } = 50;
         public int PageNumber { get; set; } = 1;
@@ -13,9 +13,6 @@ namespace OnlineShopAPI.DTOs.Request
             set => _pgeCount = value > MaxPageCount ? MaxPageCount : value;
         }
         public string ProductName { get; set; }
-        public List<string> ProductTypes { get; set; }
-        public List<string> ProductBrands { get; set; }
-        public FilterDto Filter { get; set; }
 
     }
 }
