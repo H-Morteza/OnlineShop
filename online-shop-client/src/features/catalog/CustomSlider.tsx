@@ -51,49 +51,68 @@ const PrettoSlider = styled(Slider)({
 interface Props {
   minPrice: number;
   maxPrice: number;
+  selectMax?: number;
+  selectMin?: number;
+  onChange: (min: number, max: number) => void;
 }
 
-export default function CustomSlider({ minPrice, maxPrice }: Props) {
-  const [value, setValue] = useState([minPrice, maxPrice]);
-  const [minInput, setMinInput] = useState(minPrice.toString());
-  const [maxInput, setMaxInput] = useState(maxPrice.toString());
+export default function CustomSlider({
+  minPrice,
+  maxPrice,
+  selectMax,
+  selectMin,
+  onChange,
+}: Props) {
+  const initialMin = selectMin ?? minPrice;
+  const initialMax = selectMax ?? maxPrice;
+
+  const [value, setValue] = useState([initialMin, initialMax]);
+  const [minInput, setMinInput] = useState(initialMin.toString());
+  const [maxInput, setMaxInput] = useState(initialMax.toString());
 
   const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-    setMinInput(value[0].toString());
-    setMaxInput(value[1].toString());
+    const [newMin, newMax] = newValue as number[];
+    setValue([newMin, newMax]);
+    setMinInput(newMin.toString());
+    setMaxInput(newMax.toString());
   };
-
+  const handleMouseUp = () => {
+    onChange(value[0], value[1]);
+  };
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     isMin: boolean
   ) => {
     const inputValue = event.target.value;
     const parsedInput = parseFloat(inputValue);
-    const [currentMin, currentMax] = value;
+    const [currentMin, currentMax] = isMin
+      ? [parsedInput, value[1]]
+      : [value[0], parsedInput];
+
+    if (!inputValue) {
+      setMinInput("");
+      setMaxInput("");
+      return;
+    }
 
     if (isMin) {
-      if (parsedInput == 0) setMinInput("0");
-      else {
-        setMinInput(inputValue);
-        if (parsedInput <= currentMax && parsedInput > minPrice) {
-          setValue([parsedInput, currentMax]);
-        } else if (parsedInput >= currentMax) {
-          setMinInput((currentMax - 1).toString());
-          setValue([currentMax - 1, currentMax]);
-        }
+      if (parsedInput <= currentMax && parsedInput >= minPrice) {
+        setValue([parsedInput, currentMax]);
+        onChange(parsedInput, currentMax);
+      } else if (parsedInput >= currentMax) {
+        setValue([currentMax - 1, currentMax]);
+        onChange(currentMax - 1, currentMax);
       }
+      setMinInput(parsedInput.toString());
     } else {
-      if (parsedInput == 0) setMaxInput("0");
-      else {
-        setMaxInput(inputValue);
-        if (parsedInput <= maxPrice && parsedInput > currentMin) {
-          setValue([currentMin, parsedInput]);
-        } else if (parsedInput > maxPrice) {
-          setValue([currentMin, maxPrice]);
-          setMaxInput(maxPrice.toString());
-        }
+      if (parsedInput <= maxPrice && parsedInput >= currentMin) {
+        setValue([currentMin, parsedInput]);
+        onChange(currentMin, parsedInput);
+      } else if (parsedInput >= maxPrice) {
+        setValue([currentMin, maxPrice]);
+        onChange(currentMin, maxPrice);
       }
+      setMaxInput(parsedInput.toString());
     }
   };
 
@@ -122,6 +141,7 @@ export default function CustomSlider({ minPrice, maxPrice }: Props) {
         <PrettoSlider
           onChange={handleChange}
           value={value}
+          onMouseUp={handleMouseUp}
           valueLabelDisplay="auto"
           aria-label="pretto slider"
           min={minPrice}
