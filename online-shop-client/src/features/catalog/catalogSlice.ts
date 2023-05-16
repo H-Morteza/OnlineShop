@@ -7,12 +7,14 @@ import { Product } from "../../app/models/product";
 import { RootState } from "../../app/store/configureStore";
 import { ProductReuquest } from "../../app/models/productReuquest";
 import { fetchProducts, fetchProduct, fetchFilters } from "./catalogAPI";
+import { ProductFilterResponse } from "../../app/models/productFilterResponse";
 
 interface CatalogState {
   productsLoaded: boolean;
   filtersLoaded: boolean;
   status: string;
   productReuquest: ProductReuquest;
+  productFilterResponse: ProductFilterResponse;
 }
 
 const productsAdapter = createEntityAdapter<Product>();
@@ -44,15 +46,13 @@ function initParams() {
   return {
     filter: {
       fiterType: 1,
-      maxPrice: 1000,
-      minPrice: 20,
-      withDiscount: false,
+      withDiscount: false as boolean,
     },
-    pageNumber: 1,
-    pageSize: 10,
-    productBrand: [],
+    pageNumber: 1 as number,
+    pageSize: 10 as number,
+    productBrands: [] as string[],
     productName: "",
-    productType: [],
+    productTypes: [] as string[],
   };
 }
 
@@ -63,13 +63,27 @@ export const catalogSlice = createSlice({
     filtersLoaded: false,
     status: "complete",
     productReuquest: initParams(),
+    productFilterResponse: {
+      filter: {},
+      productBrands: [],
+      productTypes: [],
+    },
   }),
   reducers: {
     setProductReuquest: (state, action) => {
+      const { filter, ...rest } = action.payload;
       state.productsLoaded = false;
-      state.productReuquest = { ...state.productReuquest, ...action.payload };
+      state.filtersLoaded = false;
+      state.productReuquest = {
+        ...state.productReuquest,
+        filter: {
+          ...state.productReuquest.filter,
+          ...filter,
+        },
+        ...rest,
+      };
     },
-    reseProductReuquest: (state) => {
+    resetProductReuquest: (state) => {
       state.productReuquest = initParams();
     },
   },
@@ -103,10 +117,13 @@ export const catalogSlice = createSlice({
         state.status = "pendingFetchFilters";
       })
       .addCase(fetchFiltersAsync.fulfilled, (state, action) => {
-        state.productReuquest.productType = action.payload.types;
-        state.productReuquest.productBrand = action.payload.brands;
-        state.productReuquest.filter.minPrice = action.payload.minPrice;
-        state.productReuquest.filter.maxPrice = action.payload.maxPrice;
+        state.productFilterResponse.productTypes = action.payload.productTypes;
+        state.productFilterResponse.productBrands =
+          action.payload.productBrands;
+        state.productFilterResponse.filter.minPrice =
+          action.payload.filter.minPrice;
+        state.productFilterResponse.filter.maxPrice =
+          action.payload.filter.maxPrice;
         state.status = "complete";
         state.filtersLoaded = true;
       })
@@ -119,4 +136,5 @@ export const catalogSlice = createSlice({
 export const productSlectors = productsAdapter.getSelectors(
   (stat: RootState) => stat.catalog
 );
-export const { setProductReuquest, reseProductReuquest } = catalogSlice.actions;
+export const { setProductReuquest, resetProductReuquest } =
+  catalogSlice.actions;
