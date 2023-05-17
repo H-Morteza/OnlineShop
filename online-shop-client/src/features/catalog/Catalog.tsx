@@ -6,6 +6,7 @@ import {
   fetchProductsAsync,
   fetchFiltersAsync,
   productSlectors,
+  setProductReuquest,
 } from "../catalog/catalogSlice";
 import {
   Box,
@@ -25,14 +26,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import {
+  ExpandLess,
+  ExpandMore,
+  RadioButtonChecked,
+  StarBorder,
+} from "@mui/icons-material";
 import React from "react";
 import CustomSlider from "../catalog/CustomSlider";
 import CustomFilterList from "../catalog/CustomFilterList";
+import ProductSearch from "./ProductSearch";
+import RadioButtonGroup from "../../app/components/RadioButonGroup";
 const sortOptions = [
-  { value: "name", lable: "Alphabetical" },
-  { value: "priceDesc", lable: "Price High to low" },
-  { value: "price", lable: "Price Low to high" },
+  { value: 1, lable: "Alphabetical" },
+  { value: 2, lable: "Price Low to high" },
+  { value: 3, lable: "Price High to low" },
 ];
 const FilterSection = ({ title, open, handleClick, children }: any) => (
   <>
@@ -47,8 +55,13 @@ const FilterSection = ({ title, open, handleClick, children }: any) => (
 );
 export default function Catalog() {
   const products = useAppSelector(productSlectors.selectAll);
-  const { productsLoaded, status, filtersLoaded, productReuquest } =
-    useAppSelector((state) => state.catalog);
+  const {
+    productsLoaded,
+    status,
+    filtersLoaded,
+    productReuquest,
+    productFilterResponse,
+  } = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!productsLoaded) dispatch(fetchProductsAsync());
@@ -59,6 +72,7 @@ export default function Catalog() {
   const [openType, setOpenType] = React.useState(true);
   const [openBrand, setOpenBrand] = React.useState(true);
   const [openPrice, setOpenPrice] = React.useState(true);
+
   const handleClick = (setter: any, otherSetter: any) => () => {
     if (otherSetter) otherSetter(true);
     setter((prev: any) => !prev);
@@ -69,26 +83,20 @@ export default function Catalog() {
     <Grid container columnSpacing={4}>
       <Grid item xs={3}>
         <Paper sx={{ mb: 2 }}>
-          <TextField
-            label="Search product"
-            variant="outlined"
-            fullWidth
-          ></TextField>
+          <ProductSearch />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Sort by</FormLabel>
-            <RadioGroup>
-              {sortOptions.map(({ value, lable }) => (
-                <FormControlLabel
-                  value={value}
-                  control={<Radio />}
-                  label={lable}
-                  key={value}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
+          <RadioButtonGroup
+            selectedValue={productReuquest.filter.filterType?.toString()!}
+            options={sortOptions}
+            onChange={(e) => {
+              dispatch(
+                setProductReuquest({
+                  filter: { filterType: parseInt(e.target.value) },
+                })
+              );
+            }}
+          />
         </Paper>
 
         <List
@@ -101,7 +109,17 @@ export default function Catalog() {
             open={openType}
             handleClick={handleClick(setOpenType, setOpenBrand)}
           >
-            <CustomFilterList customLists={productReuquest.productType!} />
+            <CustomFilterList
+              customLists={productFilterResponse.productTypes!}
+              checked={productReuquest.productTypes}
+              onChange={(items: string[]) => {
+                dispatch(
+                  setProductReuquest({
+                    productTypes: items,
+                  })
+                );
+              }}
+            />
           </FilterSection>
 
           <FilterSection
@@ -109,7 +127,17 @@ export default function Catalog() {
             open={openBrand}
             handleClick={handleClick(setOpenBrand, setOpenType)}
           >
-            <CustomFilterList customLists={productReuquest.productBrand!} />
+            <CustomFilterList
+              customLists={productFilterResponse.productBrands!}
+              checked={productReuquest.productBrands}
+              onChange={(items: string[]) => {
+                dispatch(
+                  setProductReuquest({
+                    productBrands: items,
+                  })
+                );
+              }}
+            />
           </FilterSection>
 
           <FilterSection
@@ -118,8 +146,17 @@ export default function Catalog() {
             handleClick={handleClick(setOpenPrice, null)}
           >
             <CustomSlider
-              minPrice={productReuquest.filter.minPrice!}
-              maxPrice={productReuquest.filter.maxPrice!}
+              minPrice={productFilterResponse.filter.minPrice!}
+              maxPrice={productFilterResponse.filter.maxPrice!}
+              selectMin={productReuquest.filter.minPrice!}
+              selectMax={productReuquest.filter.maxPrice!}
+              onChange={(min: number, max: number) => {
+                dispatch(
+                  setProductReuquest({
+                    filter: { minPrice: min, maxPrice: max },
+                  })
+                );
+              }}
             />
           </FilterSection>
         </List>
