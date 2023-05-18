@@ -3,6 +3,7 @@ using OnlineShopAPI.Data;
 using OnlineShopAPI.DTOs.Common;
 using OnlineShopAPI.DTOs.Request;
 using OnlineShopAPI.Entities;
+using System.Linq.Expressions;
 
 namespace OnlineShopAPI.Logics
 {
@@ -17,13 +18,12 @@ namespace OnlineShopAPI.Logics
         public async Task<(List<ProductEntiy> product, MetaDataDto metaData)> GetProducts(ProductReuquestDto productReuquest)
         {
             var productResult = _context.Products.AsQueryable();
-            if (productResult == null || !productResult.Any()) return (null, null);
 
             if (!string.IsNullOrEmpty(productReuquest.ProductName))
                 productResult = productResult.Where(x => x.Name.ToLower().Contains(productReuquest.ProductName.ToLower()));
-            if (productReuquest.ProductTypes is not null && productReuquest.ProductTypes.Count > 0)
+            if (productReuquest.ProductTypes?.Count > 0)
                 productResult = productResult.Where(x => productReuquest.ProductTypes.Contains(x.Type));
-            if (productReuquest.ProductBrands is not null && productReuquest.ProductBrands.Count > 0)
+            if (productReuquest.ProductBrands?.Count > 0)
                 productResult = productResult.Where(x => productReuquest.ProductBrands.Contains(x.Brand));
             if (productReuquest.Filter.MaxPrice is not null && productReuquest.Filter.MaxPrice > 0)
                 productResult = productResult.Where(x => x.Price <= productReuquest.Filter.MaxPrice);
@@ -31,12 +31,25 @@ namespace OnlineShopAPI.Logics
                 productResult = productResult.Where(x => x.Price >= productReuquest.Filter.MinPrice);
             if (productReuquest.Filter.WithDiscount is not null && (bool)productReuquest.Filter.WithDiscount)
                 productResult = productResult.Where(x => x.DiscountPercent > 0);
-            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.Alphabetical)
-                productResult = productResult.OrderBy(x => x.Name);
-            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.LowestPrice)
-                productResult = productResult.OrderBy(x => x.Price);
-            if (productReuquest.Filter.FilterType is not null && productReuquest.Filter.FilterType is DTOs.DataType.FilterType.HighestPrice)
-                productResult = productResult.OrderByDescending(x => x.Price);
+
+            Expression<Func<ProductEntiy, object>> orderByExpression = x => x.Name;
+            switch (productReuquest.Filter.FilterType)
+            {
+                case DTOs.DataType.FilterType.Alphabetical:
+                    orderByExpression = x => x.Name;
+                    productResult = productResult.OrderBy(orderByExpression);
+                    break;
+                case DTOs.DataType.FilterType.LowestPrice:
+                    orderByExpression = x => x.Price;
+                    productResult = productResult.OrderBy(orderByExpression);
+                    break;
+                case DTOs.DataType.FilterType.HighestPrice:
+                    orderByExpression = x => x.Price;
+                    productResult = productResult.OrderByDescending(orderByExpression);
+                    break;
+            }
+            //if (productReuquest.Filter.FilterType != DTOs.DataType.FilterType.HighestPrice)
+            //    productResult = productResult.OrderBy(orderByExpression);
 
             int count = productReuquest.PageSize;
             int index = Math.Max(productReuquest.PageNumber - 1, 0);
@@ -53,9 +66,6 @@ namespace OnlineShopAPI.Logics
             var productList = await productResult.ToListAsync();
 
             return (productList, metaData);
-
         }
     }
 }
-
-
