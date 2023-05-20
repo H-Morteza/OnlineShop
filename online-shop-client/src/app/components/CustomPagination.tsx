@@ -1,29 +1,28 @@
 import { Box, Pagination, Typography } from "@mui/material";
 
 interface Props {
-  page: number;
+  curentPage: number;
   count: number;
-  fromItem?: number;
-  toItem?: number;
+  pageSize?: number;
   totalItem?: number;
-  onChange: (pageNumber: number) => void;
+  onPageChange: (pageNumber: number) => void;
 }
 export default function CustomPagination({
-  page,
+  curentPage,
   count,
-  fromItem,
-  toItem,
+  pageSize,
   totalItem,
-  onChange,
+  onPageChange,
 }: Props) {
   function display(): string {
-    debugger;
     let result = "";
-    if (fromItem && toItem && totalItem)
-      result = `Displaying ${fromItem} to ${toItem} of ${totalItem} Items`;
+    if (pageSize && totalItem)
+      result = `Displaying ${(curentPage - 1) * pageSize + 1} - ${
+        curentPage * pageSize > totalItem ? totalItem : curentPage * pageSize
+      } of ${totalItem} Items`;
     return result;
   }
-
+  if (!totalItem) return <></>;
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -32,9 +31,9 @@ export default function CustomPagination({
           variant="outlined"
           color="primary"
           size="large"
-          page={page}
+          page={curentPage}
           count={count}
-          onChange={(event, value) => onChange(value)}
+          onChange={(event, value) => onPageChange(value)}
         />
       </Box>
     </>
