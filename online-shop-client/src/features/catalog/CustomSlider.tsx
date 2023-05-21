@@ -5,8 +5,10 @@ import {
   InputAdornment,
   InputLabel,
   Slider,
+  debounce,
   styled,
 } from "@mui/material";
+import { debug } from "console";
 import { useState } from "react";
 
 const PrettoSlider = styled(Slider)({
@@ -77,6 +79,7 @@ export default function CustomSlider({
     setMaxInput(newMax.toString());
   };
   const handleMouseUp = () => {
+    debugger;
     onChange(value[0], value[1]);
   };
   const handleInputChange = (
@@ -98,24 +101,27 @@ export default function CustomSlider({
     if (isMin) {
       if (parsedInput <= currentMax && parsedInput >= minPrice) {
         setValue([parsedInput, currentMax]);
-        onChange(parsedInput, currentMax);
+        debouncedSearch(parsedInput, currentMax);
       } else if (parsedInput >= currentMax) {
         setValue([currentMax - 1, currentMax]);
-        onChange(currentMax - 1, currentMax);
+        debouncedSearch(currentMax - 1, currentMax);
       }
       setMinInput(parsedInput.toString());
     } else {
       if (parsedInput <= maxPrice && parsedInput >= currentMin) {
         setValue([currentMin, parsedInput]);
-        onChange(currentMin, parsedInput);
+        debouncedSearch(currentMin, parsedInput);
       } else if (parsedInput >= maxPrice) {
         setValue([currentMin, maxPrice]);
-        onChange(currentMin, maxPrice);
+        debouncedSearch(currentMin, maxPrice);
       }
       setMaxInput(parsedInput.toString());
     }
   };
 
+  const debouncedSearch = debounce((min: number, max: number) => {
+    onChange(min, max);
+  }, 100);
   return (
     <Box sx={{ padding: "5px 25px 0 5px" }}>
       <FormControl fullWidth sx={{ m: 1 }} variant="standard">
