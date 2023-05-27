@@ -26,19 +26,19 @@ export default function ProductCardSkeleton() {
           <Skeleton
             animation="wave"
             height={15}
-            width="90%"
+            width="70%"
             style={{ marginBottom: 6 }}
           />
           <Skeleton
             animation="wave"
             height={15}
-            width="75%"
+            width="55%"
             style={{ marginBottom: 6 }}
           />
           <Skeleton
             animation="wave"
             height={15}
-            width="60%"
+            width="40%"
             style={{ marginBottom: 6 }}
           />
         </>

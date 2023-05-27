@@ -8,6 +8,7 @@ import { RootState } from "../../app/store/configureStore";
 import { ProductReuquest } from "../../app/models/productReuquest";
 import { fetchProducts, fetchProduct, fetchFilters } from "./catalogAPI";
 import { ProductFilterResponse } from "../../app/models/productFilterResponse";
+import { MetaData } from "../../app/models/pagination";
 
 interface CatalogState {
   productsLoaded: boolean;
@@ -15,6 +16,7 @@ interface CatalogState {
   status: string;
   productReuquest: ProductReuquest;
   productFilterResponse: ProductFilterResponse;
+  metaData: MetaData | null;
 }
 
 const productsAdapter = createEntityAdapter<Product>();
@@ -25,7 +27,9 @@ export const fetchProductsAsync = createAsyncThunk<
   { state: RootState }
 >("catalog/fetchProductsAsync", async (_, thunkAPI) => {
   const productReuquest = thunkAPI.getState().catalog.productReuquest;
-  return await fetchProducts(productReuquest);
+  const response = await fetchProducts(productReuquest);
+  thunkAPI.dispatch(setMetaData(response.metaData));
+  return response.items;
 });
 
 export const fetchProductAsync = createAsyncThunk<Product, number>(
@@ -49,7 +53,7 @@ function initParams() {
       withDiscount: false as boolean,
     },
     pageNumber: 1 as number,
-    pageSize: 10 as number,
+    pageSize: 6 as number,
     productBrands: [] as string[],
     productName: "",
     productTypes: [] as string[],
@@ -68,6 +72,7 @@ export const catalogSlice = createSlice({
       productBrands: [],
       productTypes: [],
     },
+    metaData: null,
   }),
   reducers: {
     setProductReuquest: (state, action) => {
@@ -85,6 +90,9 @@ export const catalogSlice = createSlice({
     },
     resetProductReuquest: (state) => {
       state.productReuquest = initParams();
+    },
+    setMetaData: (state, action) => {
+      state.metaData = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -136,5 +144,5 @@ export const catalogSlice = createSlice({
 export const productSlectors = productsAdapter.getSelectors(
   (stat: RootState) => stat.catalog
 );
-export const { setProductReuquest, resetProductReuquest } =
+export const { setProductReuquest, resetProductReuquest, setMetaData } =
   catalogSlice.actions;
