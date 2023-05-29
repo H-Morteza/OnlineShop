@@ -1,12 +1,30 @@
 using Bogus;
+using Microsoft.AspNetCore.Identity;
 using OnlineShopAPI.Entities;
 
 namespace OnlineShopAPI.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(ShopContext context)
+        public static async Task Initialize(ShopContext context, UserManager<User> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                User user = new()
+                {
+                    UserName = "morteza",
+                    Email = "morteza@gmail.com"
+                };
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, "Member");
+                User admin = new()
+                {
+                    UserName = "admin",
+                    Email = "admin@gmail.com"
+                };
+                await userManager.CreateAsync(admin, "Pa$$w0rd");
+                await userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });
+            }
             if (context.Products.Any()) return;
             var faker = new Faker();
             for (int i = 0; i < 20; i++)
