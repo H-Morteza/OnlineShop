@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopAPI.Data;
+using OnlineShopAPI.Entities;
 
 namespace OnlineShopAPI.CustomMiddleware
 {
@@ -24,11 +26,12 @@ namespace OnlineShopAPI.CustomMiddleware
         {
             using var scop = httpContext.RequestServices.CreateScope();
             var context = scop.ServiceProvider.GetRequiredService<ShopContext>();
+            var userManager = scop.ServiceProvider.GetRequiredService<UserManager<User>>();
             var looger= scop.ServiceProvider.GetRequiredService<ILogger<Program>>();
             try
             {               
-                context.Database.Migrate();
-                DbInitializer.Initialize(context);
+                await context.Database.MigrateAsync();
+                await DbInitializer.Initialize(context, userManager);
             }
             catch (Exception ex)
             {
