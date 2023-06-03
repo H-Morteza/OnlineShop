@@ -5,7 +5,7 @@ interface Props {
   onChange: (event: any) => void;
   selectedValue: string;
 }
-export default function RadioButtonGroup({
+export default function CustomRadioButonGroup({
   options,
   onChange,
   selectedValue,

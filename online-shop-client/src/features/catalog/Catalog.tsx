@@ -34,9 +34,9 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 import CustomSlider from "../catalog/CustomSlider";
-import CustomFilterList from "../catalog/CustomFilterList";
+import CustomFilterList from "../../app/components/CustomFilterList";
 import ProductSearch from "./ProductSearch";
-import RadioButtonGroup from "../../app/components/RadioButonGroup";
+import CustomRadioButonGroup from "../../app/components/CustomRadioButonGroup";
 import CustomPagination from "../../app/components/CustomPagination";
 const sortOptions = [
   { value: 1, lable: "Alphabetical" },
@@ -88,7 +88,7 @@ export default function Catalog() {
           <ProductSearch />
         </Paper>
         <Paper sx={{ mb: 2, p: 2 }}>
-          <RadioButtonGroup
+          <CustomRadioButonGroup
             selectedValue={productReuquest.filter.filterType?.toString()!}
             options={sortOptions}
             onChange={(e) => {
