@@ -69,10 +69,17 @@ const Catalog = {
   filters: () => requests.get("products/filters"),
 };
 
+const Account = {
+  login: (values: any) => requests.post("account/login", values),
+  register: (values: any) => requests.post("account/register", values),
+  currentUser: () => requests.get("account/currentUser"),
+};
+
 const apiHelper = {
   Catalog,
   ApiErrors,
   Basket,
+  Account,
 };
 
 export default apiHelper;
