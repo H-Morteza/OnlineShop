@@ -36,7 +36,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
   }
 );
 
-export const accountSlce = createSlice({
+export const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {},

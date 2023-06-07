@@ -22,6 +22,8 @@ import apiHelper from "../api/apiHelper";
 import LodingComponent from "./LodingComponent";
 import { useAppDispatch } from "../store/configureStore";
 import { setBasket } from "../../features/basket/basketSlice";
+import Login from "../../features/account/Login";
+import Register from "../../features/account/Register";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -65,6 +67,8 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/basket" element={<BasketPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Container>
