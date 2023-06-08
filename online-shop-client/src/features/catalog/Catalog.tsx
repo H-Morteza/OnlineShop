@@ -33,7 +33,7 @@ import {
   StarBorder,
 } from "@mui/icons-material";
 import React from "react";
-import CustomSlider from "../catalog/CustomSlider";
+import CustomSlider from "../../app/components/CustomSlider";
 import CustomFilterList from "../../app/components/CustomFilterList";
 import ProductSearch from "./ProductSearch";
 import CustomRadioButonGroup from "../../app/components/CustomRadioButonGroup";
