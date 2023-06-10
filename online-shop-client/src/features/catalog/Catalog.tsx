@@ -11,6 +11,7 @@ import {
 import {
   Box,
   Collapse,
+  Container,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -81,6 +82,16 @@ export default function Catalog() {
     setter((prev: any) => !prev);
   };
   /*   if (!filtersLoaded) return <LodingComponent message="Loading Products..." />; */
+  if (products.length == 0)
+    return (
+      <Grid container spacing={1}>
+        <Container component={Paper} sx={{ padding: 10, margin: 1 }}>
+          <Typography gutterBottom variant="h3" sx={{ textAlign: "center" }}>
+            Oops - There is no product found
+          </Typography>
+        </Container>
+      </Grid>
+    );
   return (
     <Grid container columnSpacing={4}>
       <Grid item xs={3}>
