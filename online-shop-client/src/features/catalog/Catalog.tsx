@@ -81,8 +81,9 @@ export default function Catalog() {
     if (otherSetter) otherSetter(true);
     setter((prev: any) => !prev);
   };
-  /*   if (!filtersLoaded) return <LodingComponent message="Loading Products..." />; */
-  if (products.length == 0)
+  if (!productsLoaded && status.includes("pending"))
+    return <LodingComponent message="Loading Products..." />;
+  if (products.length == 0 && status.includes("complete"))
     return (
       <Grid container spacing={1}>
         <Container component={Paper} sx={{ padding: 10, margin: 1 }}>
