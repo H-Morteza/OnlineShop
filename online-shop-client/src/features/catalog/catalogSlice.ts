@@ -65,7 +65,7 @@ export const catalogSlice = createSlice({
   initialState: productsAdapter.getInitialState<CatalogState>({
     productsLoaded: false,
     filtersLoaded: false,
-    status: "complete",
+    status: "pending",
     productReuquest: initParams(),
     productFilterResponse: {
       filter: {},
