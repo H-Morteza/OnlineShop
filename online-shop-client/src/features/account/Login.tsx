@@ -65,8 +65,7 @@ export default function Login() {
           autoFocus
           {...register("username", { required: "Username is required" })}
           error={!!errors.username}
-
-          //helperText={errors?.username?.message}
+          helperText={<>{errors?.username?.message}</>}
         />
 
         <TextField
@@ -76,7 +75,7 @@ export default function Login() {
           type="password"
           {...register("password", { required: "Password is required" })}
           error={!!errors.password}
-          //helperText={errors?.password?.message}
+          helperText={<>{errors?.password?.message}</>}
         />
 
         <LoadingButton
@@ -85,7 +84,7 @@ export default function Login() {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 3, mb: 2, height: 50 }}
         >
           Sign In
         </LoadingButton>
@@ -98,12 +97,3 @@ export default function Login() {
     </Container>
   );
 }
-
-/* export default function Login() {
-  return (
-    <>
-      <h1>Register</h1>
-    </>
-  );
-}
- */
