@@ -2,11 +2,18 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { ProductReuquest } from "../models/productReuquest";
 import { PaginatedResponse } from "../models/pagination";
+import { store } from "../store/configureStore";
 
 axios.defaults.baseURL = "http://localhost:5000/api/";
 const requestBody = (response: AxiosResponse) => response.data;
 axios.defaults.withCredentials = true;
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 100));
+axios.interceptors.request.use((config) => {
+  const token = store.getState().account.user?.token;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 axios.interceptors.response.use(
   async (response) => {
     await sleep();
