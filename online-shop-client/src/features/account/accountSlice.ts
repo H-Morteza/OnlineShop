@@ -24,8 +24,8 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
   }
 );
 
-export const fetchCurrentUser = createAsyncThunk<User>(
-  "account/fetchCurrentUser",
+export const fetchCurrentUserAsync = createAsyncThunk<User>(
+  "account/fetchCurrentUserAsync",
   async (_, thunkAPI) => {
     thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
@@ -57,20 +57,20 @@ export const accountSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchCurrentUser.rejected, (state) => {
+    builder.addCase(fetchCurrentUserAsync.rejected, (state) => {
       state.user = null;
       localStorage.removeItem("user");
       toast.error("Session expired - please login again");
       window.location.href = "/";
     });
     builder.addMatcher(
-      isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
+      isAnyOf(signInUser.fulfilled, fetchCurrentUserAsync.fulfilled),
       (state, action) => {
         state.user = action.payload;
       }
     );
     builder.addMatcher(
-      isAnyOf(signInUser.rejected, fetchCurrentUser.rejected),
+      isAnyOf(signInUser.rejected, fetchCurrentUserAsync.rejected),
       (state, action) => {
         console.log(action.payload);
       }
