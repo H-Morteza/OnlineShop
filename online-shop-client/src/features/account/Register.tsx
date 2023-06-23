@@ -8,20 +8,39 @@ import {
   Paper,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
 import apiHelper from "../../app/api/apiHelper";
+import { useState } from "react";
+import { error } from "console";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { isSubmitting, errors, isValid },
   } = useForm({
     mode: "all",
   });
+
+  function handleApiErrors(er: any) {
+    Object.keys(er.data.errors).forEach((key) => {
+      er.data.errors[key].forEach((error: string) => {
+        if (error.includes("Password")) {
+          setError("password", { message: error });
+        } else if (error.includes("Email")) {
+          setError("email", { message: error });
+        } else if (error.includes("Username")) {
+          setError("username", { message: error });
+        }
+      });
+    });
+  }
 
   return (
     <Container
@@ -42,7 +61,14 @@ export default function Register() {
       </Typography>
       <Box
         component="form"
-        onSubmit={handleSubmit((data) => apiHelper.Account.register(data))}
+        onSubmit={handleSubmit((data) =>
+          apiHelper.Account.register(data)
+            .then(() => {
+              toast.success("Registration successful - you can now login");
+              navigate(location.state?.from?.pathname || "/login");
+            })
+            .catch((errors) => handleApiErrors(errors))
+        )}
         noValidate
         sx={{ mt: 1 }}
       >
