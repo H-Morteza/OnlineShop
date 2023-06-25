@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopAPI.Data;
 using OnlineShopAPI.Entities;
 
+
+
 namespace OnlineShopAPI.Logics
 {
     public class BasketLogic
@@ -39,22 +41,33 @@ namespace OnlineShopAPI.Logics
             if (item.Quantity <= 0) basketItems.Remove(item);
         }
 
-        public async Task<BasketEntity> RetrieveBasket()
+        public async Task<BasketEntity> RetrieveBasket(string buyerId)
         {
+            if(string.IsNullOrEmpty(buyerId))
+            {
+                _httpContext.Response.Cookies.Delete("buyerId");
+                return null;
+            }
             return await _context.Baskets
                            .Include(i => i.Items)
                            .ThenInclude(p => p.Product)
-                           .FirstOrDefaultAsync(x => x.BuyerId == _httpContext.Request.Cookies["buyerId"]);
+                           .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
         }
-        public BasketEntity CreatBasket()
+       
+        public BasketEntity CreatBasket(string userbuyerId)
         {
-            var buyerId = Guid.NewGuid().ToString();
-            var cookieOptions = new CookieOptions
+            string buyerId = userbuyerId;
+            if (string.IsNullOrEmpty(buyerId))
             {
-                IsEssential = true,
-                Expires = DateTime.Now.AddDays(30)
-            };
-            _httpContext.Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+                buyerId = Guid.NewGuid().ToString();
+                var cookieOptions = new CookieOptions
+                {
+                    IsEssential = true,
+                    Expires = DateTime.Now.AddDays(30)
+                };
+                _httpContext.Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+            }
+           
             var basket = new BasketEntity
             {
                 BuyerId = buyerId,
