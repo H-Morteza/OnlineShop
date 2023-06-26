@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShopAPI.Data;
 using OnlineShopAPI.DTOs.Request;
 using OnlineShopAPI.DTOs.Response;
 using OnlineShopAPI.Entities;
+using OnlineShopAPI.Logics;
 using OnlineShopAPI.Services;
 
 namespace OnlineShopAPI.Controllers
@@ -12,11 +15,15 @@ namespace OnlineShopAPI.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
+        private readonly ShopContext _context;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<User> userManager, TokenService tokenService)
+        public AccountController(UserManager<User> userManager, TokenService tokenService, ShopContext context, IMapper mapper)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _mapper = mapper;
+            _context = context;
         }
 
         [HttpPost("login")]
@@ -25,10 +32,23 @@ namespace OnlineShopAPI.Controllers
             var user = await _userManager.FindByNameAsync(loginReuquest.UserName);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginReuquest.Password))
                 return Unauthorized();
+
+            var basketItem = new BasketLogic(_context, HttpContext);
+            var userBasket = await basketItem.RetrieveBasket(loginReuquest.UserName);
+            var anonBasket = await basketItem.RetrieveBasket(Request.Cookies["buyerId"]);
+
+            if(anonBasket != null)
+            {
+                if(userBasket != null) _context.Baskets.Remove(userBasket);
+                anonBasket.BuyerId = user.UserName;
+                Response.Cookies.Delete("buyerId");
+                await _context.SaveChangesAsync();
+            }
             return new UserResponseDto()
             {
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user),
+                Basket = anonBasket != null ? _mapper.Map<BasketResponseDto>(anonBasket) : _mapper.Map<BasketResponseDto>(userBasket)
             };
         }
         [HttpPost("register")]
