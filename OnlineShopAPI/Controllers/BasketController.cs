@@ -28,7 +28,7 @@ namespace OnlineShopAPI.Controllers
         private async Task<(BasketEntity basketEntity, BasketLogic basketLogic)> GetOrSetBasket()
         {
             var basketItem = new BasketLogic(_context, HttpContext);
-            var basket = await basketItem.RetrieveBasket();
+            var basket = await basketItem.RetrieveBasket(GetBuyerId());
             return (basket, basketItem);
         }
 
@@ -36,7 +36,7 @@ namespace OnlineShopAPI.Controllers
         public async Task<ActionResult<BasketResponseDto>> AddItemToBasket(long productId, int quantity)
         {
             var (basketEntity, basketLogic) = await GetOrSetBasket();
-            if (basketEntity == null) basketEntity = basketLogic.CreatBasket();
+            if (basketEntity == null) basketEntity = basketLogic.CreatBasket(User.Identity?.Name);
             var product = await _context.Products.FindAsync(productId);
             if (product == null) return BadRequest(new ProblemDetails { Title = "Product not found" });
 
@@ -55,6 +55,10 @@ namespace OnlineShopAPI.Controllers
             var result = await _context.SaveChangesAsync();
             if (result > 0) return Ok();
             return BadRequest(new ProblemDetails { Title = "Problem saving remove item from basket" });
+        }
+        private string GetBuyerId()
+        {
+            return User.Identity?.Name ?? Request.Cookies["buyerId"];
         }
     }
 }
