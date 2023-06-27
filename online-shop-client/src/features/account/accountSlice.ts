@@ -3,6 +3,7 @@ import { User } from "../../app/models/user";
 import { FieldValues } from "react-hook-form";
 import apiHelper from "../../app/api/apiHelper";
 import { toast } from "react-toastify";
+import { setBasket } from "../basket/basketSlice";
 
 interface AccountState {
   user: User | null;
@@ -15,7 +16,9 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
   async (data, thunkAPI) => {
     try {
-      const user = await apiHelper.Account.login(data);
+      const userDto = await apiHelper.Account.login(data);
+      const { basket, ...user } = userDto;
+      if (basket) thunkAPI.dispatch(setBasket(basket));
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {
@@ -29,7 +32,9 @@ export const fetchCurrentUserAsync = createAsyncThunk<User>(
   async (_, thunkAPI) => {
     thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
-      const user = await apiHelper.Account.currentUser();
+      const userDto = await apiHelper.Account.currentUser();
+      const { basket, ...user } = userDto;
+      if (basket) thunkAPI.dispatch(setBasket(basket));
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {

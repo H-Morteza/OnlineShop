@@ -113,7 +113,7 @@ export default function Catalog() {
           />
         </Paper>
 
-        <List
+        <Paper
           sx={{ width: "100%", bgcolor: "background.paper" }}
           component="nav"
           aria-labelledby="nested-list-subheader"
@@ -173,7 +173,7 @@ export default function Catalog() {
               }}
             />
           </FilterSection>
-        </List>
+        </Paper>
       </Grid>
       <Grid item xs={9}>
         <ProductList products={products} />
